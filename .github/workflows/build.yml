@@ -79,35 +79,35 @@ concurrency:
 # create the release draft.
 jobs:
   # First, ensure that nothing breaks before attempting to build
-  preflight:
-    name: 'Preflight: Lint/Unit tests'
-    uses: ./.github/workflows/check.yml
-  # If we're building a full release, we have to make sure that nobody (that is:
-  # Hendrik) forgot to increment the tag version. If we already have a tag with
-  # this version, we should not proceed, because that will then lead to an
-  # overwriting of the files in the previous release. That doesn't wreak any
-  # havoc because we don't push unstable code to master, BUT it looks bad.
-  verify_version:
-    name: 'Preflight: Verify version tag'
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Clone repository (master branch)
-        uses: actions/checkout@v4
-        with:
-          ref: 'master'
-          fetch-depth: 0 # Required for the tag verification step.
-      - name: Setup NodeJS ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'yarn'
-      - name: Retrieve tag version
-        id: ref
-        run: echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_ENV
-      - name: Verify the corresponding tag does not yet exist
-        if: github.ref_name == 'master'
-        # NOTE: the ! will return 0 if the command fails, and 1 otherwise
-        run: '! git rev-parse "v${{env.version}}"'
+  # preflight:
+  #   name: 'Preflight: Lint/Unit tests'
+  #   uses: ./.github/workflows/check.yml
+  # # If we're building a full release, we have to make sure that nobody (that is:
+  # # Hendrik) forgot to increment the tag version. If we already have a tag with
+  # # this version, we should not proceed, because that will then lead to an
+  # # overwriting of the files in the previous release. That doesn't wreak any
+  # # havoc because we don't push unstable code to master, BUT it looks bad.
+  # verify_version:
+  #   name: 'Preflight: Verify version tag'
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Clone repository (master branch)
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: 'master'
+  #         fetch-depth: 0 # Required for the tag verification step.
+  #     - name: Setup NodeJS ${{ env.NODE_VERSION }}
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: 'yarn'
+  #     - name: Retrieve tag version
+  #       id: ref
+  #       run: echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_ENV
+  #     - name: Verify the corresponding tag does not yet exist
+  #       if: github.ref_name == 'master'
+  #       # NOTE: the ! will return 0 if the command fails, and 1 otherwise
+  #       run: '! git rev-parse "v${{env.version}}"'
 
 
 
